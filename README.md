@@ -1,7 +1,7 @@
 # Akka-rpc
 
 
-This project documents my first Akka hands-on experience, including Master and Woker, how they connect and send/receive messages from each other and how they react to it.
+This project documents my first Akka hands-on experience, including Master and Woker, how they connect and send/receive messages to/from each other and how they react to it by using case model.
 
 Akka is the implementation of the **Actor** Model on the JVM, a toolkit for building highly concurrent, distributed, and resilient message-driven applications for Java and Scala. 
 

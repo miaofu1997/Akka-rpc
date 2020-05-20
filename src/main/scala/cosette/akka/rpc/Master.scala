@@ -17,13 +17,15 @@ class Master extends Actor {
 
   val id2Worker = new mutable.HashMap[String, WorkerInfo]()
 
+  val CHECK_INTERVAL = 10000
+
 
   //在preStart中启动定时器，定期检查超时的Worker，然后剔除
   override def preStart(): Unit = {
 
     import context.dispatcher
 
-    context.system.scheduler.schedule(0 millisecond, 10000 millisecond, self, CheckTimeOutWorker)
+    context.system.scheduler.schedule(0 millisecond, CHECK_INTERVAL millisecond, self, CheckTimeOutWorker)
 
   }
 
@@ -69,7 +71,7 @@ class Master extends Actor {
 
       //遍历超时的Worker
       val workers = id2Worker.values
-      val deadWorkers = workers.filter(w => currentTime - w.lastUpdateTime > 10000)
+      val deadWorkers = workers.filter(w => currentTime - w.lastUpdateTime > CHECK_INTERVAL)
 
       deadWorkers.foreach(w => {
         //移除超时的Worker
@@ -83,11 +85,15 @@ class Master extends Actor {
 }
 
 object Master {
+
+  val MASTER_ACTOR_SYSTEM = "MASTER_ACTOR_SYSTEM"
+  val MASTER_ACTOR = "MASTER_ACTOR"
+
   //程序执行的入口
   def main(args: Array[String]): Unit = {
 
-    val host = "localhost"
-    val port = 8888
+    val host = args(0)
+    val port = args(1).toInt
 
     val configStr =
       s"""
@@ -98,11 +104,12 @@ object Master {
 
     //首先创建一个ActorSystem【单例的，在scala中就是一个object】
     val conf = ConfigFactory.parseString(configStr)
-    val actorSystem = ActorSystem("MASTER_ACTOR_SYSTEM", conf)
+    val actorSystem = ActorSystem(MASTER_ACTOR_SYSTEM, conf)
 
     //通过ActorSystem创建Actor
     //通过反射创建指定类型的Actor的实例
-    val masteractor = actorSystem.actorOf(Props[Master], "MASTER_ACTOR")
+//    val masteractor = actorSystem.actorOf(Props[Master], MASTER_ACTOR)
+    actorSystem.actorOf(Props[Master], MASTER_ACTOR)
 
     //向Actor发生消息
     //! 发生异步消息

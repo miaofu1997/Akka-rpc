@@ -117,10 +117,10 @@
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>reference.conf</resource>
                                 </transformer>
-                                <!-- 指定maven方法 -->
-                                <!-- <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
-                                <!-- <mainClass>cn._51doit.rpc.Master</mainClass>-->
-                                <!-- </transformer>-->
+                                <!-- 指定main方法 -->
+                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                 <mainClass>cosette.akka.rpc.Worker</mainClass>
+                                 </transformer>
                             </transformers>
                         </configuration>
                     </execution>
